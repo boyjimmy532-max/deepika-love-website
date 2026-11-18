@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#170b1d">
+<title>Hey Deepika ♡</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+:root{--pink:#ff6fae;--lav:#c9a7ff;--bg:#100916}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;overflow-x:hidden;color:#fff;font-family:'DM Sans',sans-serif;background:radial-gradient(circle at 20% 15%,#4a1742 0,transparent 34%),radial-gradient(circle at 85% 80%,#29205c 0,transparent 38%),linear-gradient(135deg,#100916,#21102b 55%,#100916);display:grid;place-items:center;padding:22px}
+#hearts{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.heart{position:absolute;bottom:-50px;color:#ff7eb6;opacity:.55;animation:floatUp linear infinite;text-shadow:0 0 16px #ff4f9a}
+@keyframes floatUp{to{transform:translateY(-115vh) rotate(25deg);opacity:0}}
+.card{position:relative;z-index:1;width:min(100%,570px);padding:clamp(25px,6vw,48px);text-align:center;border:1px solid #ffffff25;border-radius:28px;background:linear-gradient(145deg,#ffffff16,#ffffff08);backdrop-filter:blur(16px);box-shadow:0 25px 80px #0008}
+.kicker{letter-spacing:4px;text-transform:uppercase;font-size:11px;color:#f6a9cf}
+h1{font:700 clamp(2.25rem,9vw,4rem)/1.1 'Playfair Display',serif;margin:16px 0;color:#fff;text-shadow:0 0 25px #ff6fae66}
+h2{font:700 clamp(1.8rem,7vw,2.7rem)/1.2 'Playfair Display',serif;margin:18px 0 28px}
+p{color:#f4dce9;line-height:1.7}
+.sub{font-size:15px;color:#e9c9dd}
+button{border:0;border-radius:999px;padding:14px 25px;font:700 15px 'DM Sans',sans-serif;cursor:pointer;transition:transform .2s,filter .2s,box-shadow .2s}
+button:hover{transform:translateY(-3px);filter:brightness(1.1)}
+.primary{color:#271126;background:linear-gradient(90deg,#ff9bc7,#d9b5ff);box-shadow:0 8px 25px #ff70b344}
+.choices{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin:22px 0 8px}
+.yes{background:#258dff;color:white;min-width:110px;box-shadow:0 7px 22px #258dff44}
+.no{background:#ef476f;color:white;min-width:110px;box-shadow:0 7px 22px #ef476f44}
+.hint{font-size:13px;color:#f4a8c8;margin-top:12px}
+.feedback{min-height:45px;margin:18px 0 0;font-size:clamp(1.15rem,5vw,1.65rem);font-weight:700;color:#ffd4e8}
+.small{font-size:12px;color:#c9b2c7;margin-top:22px}
+.hidden{display:none}
+#flash{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:#170b1d;opacity:0;pointer-events:none;transition:opacity .2s;font-size:clamp(6rem,25vw,11rem)}
+#flash.show{opacity:1}
+#quit{margin-top:28px;background:#ffffff12;color:#f4dce9;border:1px solid #ffffff30}
+@media(max-width:380px){.card{padding:24px 18px}.choices{gap:9px}button{padding:13px 20px}}
+</style>
+</head>
+<body>
+<div id="hearts"></div><div id="flash"></div>
+<main class="card">
+  <section id="welcome">
+    <div class="kicker">a little page for you ♡</div>
+    <h1>Hey Deepika<br><span style="color:#ff9bc7">(mur tiri)</span></h1>
+    <p class="sub">A tiny set of questions, made just for you. 💗</p>
+    <button class="primary" onclick="start()">LET'S GET STARTED ✨</button>
+  </section>
+  <section id="quiz" class="hidden">
+    <div class="kicker" id="count">QUESTION 01</div>
+    <h2 id="question"></h2>
+    <div class="choices">
+      <button class="no" id="noBtn" onclick="answer('no')">NO</button>
+      <button class="yes" id="yesBtn" onclick="answer('yes')">YES</button>
+    </div>
+    <div class="hint" id="hint"></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="small">♡ answer honestly… or maybe not ♡</div>
+  </section>
+  <section id="ending" class="hidden">
+    <div class="kicker">one last thing ♡</div>
+    <h1 style="font-size:clamp(2rem,8vw,3.3rem)">Hbo de arr<br>QUESTIONS nokhodho</h1>
+    <h2 style="color:#ff9bc7">I miss you so much 💗</h2>
+    <button id="quit" onclick="quitPage()">QUIT ✕</button>
+  </section>
+  <section id="closed" class="hidden">
+    <h1>Bye Deepika ♡</h1><p>This little page has ended.</p>
+  </section>
+</main>
+<script>
+const questions=[
+ {q:"Do you love me (I know you don't).",hint:"plz don't click here",no:"why???",yes:"I love you toooo 💗"},
+ {q:"Toi debojit k bhal pa hoi na tor mayere r kosom.",hint:"",no:"I know it's a lie 🤨",yes:"byy 👋",endOnYes:true},
+ {q:"Do you miss mee?",hint:"",no:"😢 Koi baat nhi",yes:"Miss you too 💞"},
+ {q:"Dudu larva dibi na?",hint:"",no:"tani tani khai lom 😋",yes:"yeeeeeessssssssss 💖"},
+ {q:"Tur kola na boga tol fale 🤪",hint:"",no:"wow tasty 😋",yes:"wow tasty 😋",noLabel:"Kola",yesLabel:"Boga"},
+ {q:"Mor logot suhi suhi kiss korbi na?",hint:"",no:"nokorili hbo neki moi krim 🥺",yes:"thik ase tension nolbi krim de 💗"},
+ {q:"Tok api lage na apa lage mane amar soli?",hint:"Choose one ♡",no:"mok o api a lage ❤️",yes:"mok api he lage 💙",noLabel:"API",yesLabel:"APA"}
+];
+let index=0,locked=false;
+function start(){document.getElementById('welcome').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');showQuestion()}
+function showQuestion(){
+ const q=questions[index];locked=false;
+ document.getElementById('count').textContent='QUESTION 0'+(index+1);
+ document.getElementById('question').textContent=q.q;
+ document.getElementById('hint').textContent=q.hint;
+ document.getElementById('feedback').textContent='';
+ document.getElementById('yesBtn').style.display='inline-block';
+ document.getElementById('noBtn').style.display='inline-block';
+ document.getElementById('noBtn').textContent=q.noLabel||'NO';
+ document.getElementById('yesBtn').textContent=q.yesLabel||'YES';
+}
+function flashEmoji(){const f=document.getElementById('flash');f.classList.add('show');setTimeout(()=>f.classList.remove('show'),3000)}
+function answer(choice){
+ if(locked)return;locked=true;
+ const q=questions[index],feedback=document.getElementById('feedback');
+ feedback.textContent=choice==='yes'?q.yes:q.no;
+ 
+ if(q.endOnYes && choice==='yes'){
+   document.getElementById('yesBtn').style.display='none';
+   document.getElementById('noBtn').style.display='none';
+   document.getElementById('hint').textContent='';
+   setTimeout(showBye,1600);return;
+ }
+ setTimeout(()=>{
+   index++;
+   if(index<questions.length)showQuestion();else showEnding();
+ },choice==='no'&&index===0?1900:1600);
+}
+function showBye(){
+ document.getElementById('quiz').classList.add('hidden');
+ document.getElementById('ending').classList.remove('hidden');
+ document.querySelector('#ending h1').textContent='Byy 👋';
+ document.querySelector('#ending h2').textContent='';
+ document.getElementById('quit').style.display='none';
+}
+function showEnding(){document.getElementById('quiz').classList.add('hidden');document.getElementById('ending').classList.remove('hidden')}
+function quitPage(){
+ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+ document.getElementById('closed').classList.remove('hidden');
+ try{window.close()}catch(e){}
+}
+for(let i=0;i<24;i++){const h=document.createElement('span');h.className='heart';h.textContent=Math.random()>.5?'♥':'♡';h.style.left=Math.random()*100+'%';h.style.fontSize=(12+Math.random()*23)+'px';h.style.animationDuration=(8+Math.random()*12)+'s';h.style.animationDelay=(-Math.random()*18)+'s';document.getElementById('hearts').appendChild(h)}
+</script>
+</body>
+</html>
